@@ -26,6 +26,7 @@ public class ResponseJsonServlet extends HttpServlet {
         helloData.setAge(25);
         String result = objectMapper.writeValueAsString(helloData); //객체를 가지고 값을 써서 문자로 바꾸는 것
         response.getWriter().write(result);
+        // json형식이 거의 표준이라고 보면 된다
 
     }
 }
