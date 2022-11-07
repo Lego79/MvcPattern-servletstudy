@@ -1,0 +1,44 @@
+package hello.servlet.web.sprintmvc.v2;
+
+import hello.servlet.basic.domain.member.Member;
+import hello.servlet.basic.domain.member.MemberRepository;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+/**
+ * 클래스 단위 -> 메서드 단위
+ * @RequestMapping 클래스 레벨과 메서드 레벨 조합
+ */
+@Controller
+@RequestMapping("/springmvc/v2/members") //중복부분을 제거해서
+public class SpringMemberControllerV2 {
+    private MemberRepository memberRepository = MemberRepository.getInstance();
+    @RequestMapping("/new-form") // 이부분과 합쳐져서 매핑이 된다
+    public ModelAndView newForm() {
+        return new ModelAndView("new-form");
+    }
+
+    @RequestMapping("/save")
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse
+            response) {
+        String username = request.getParameter("username");
+        int age = Integer.parseInt(request.getParameter("age"));
+        Member member = new Member(username, age);
+        memberRepository.save(member);
+        ModelAndView mav = new ModelAndView("save-result");
+        mav.addObject("member", member);
+        return mav;
+    }
+
+    //springmvc/v2/members - 더이상 내려갈게 없으면 members를 호출출
+   @RequestMapping
+    public ModelAndView members() {
+        List<Member> members = memberRepository.findAll();
+        ModelAndView mav = new ModelAndView("members");
+        mav.addObject("members", members);
+        return mav;
+    }
+}

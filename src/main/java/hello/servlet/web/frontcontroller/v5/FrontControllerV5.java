@@ -6,6 +6,7 @@ import hello.servlet.web.frontcontroller.v3.MemberFormControllerV3;
 import hello.servlet.web.frontcontroller.v3.MemberListControllerV3;
 import hello.servlet.web.frontcontroller.v3.MemberSaveControllerV3;
 import hello.servlet.web.frontcontroller.v5.adapter.ControllerV3HandlerAdapter;
+import hello.servlet.web.frontcontroller.v5.adapter.ControllerV4HandlerAdapter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,7 +25,7 @@ public class FrontControllerV5 extends HttpServlet {
     private final Map<String, Object> handlerMappingMap = new HashMap<>();
     private final List<MyHandlerAdapter> handlerAdapters =  new ArrayList<>();
 
-    public FrontControllerServletV5() {
+    public void FrontControllerServletV5() {
         initHandlerMappingMap();
         initHandlerAdapters();
     }
@@ -37,7 +38,9 @@ public class FrontControllerV5 extends HttpServlet {
                 MemberListControllerV3());
     }
     private void initHandlerAdapters() {
+
         handlerAdapters.add(new ControllerV3HandlerAdapter());
+        handlerAdapters.add(new ControllerV4HandlerAdapter());
     }
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse
@@ -49,8 +52,11 @@ public class FrontControllerV5 extends HttpServlet {
             return;
         }
         MyHandlerAdapter adapter = getHandlerAdapter(handler);
+
         ModelView mv = adapter.handle(request, response, handler);
+
         MyView view = viewResolver(mv.getViewName());
+
         view.render(mv.getModel(), request, response);
     }
     private Object getHandler(HttpServletRequest request) {
